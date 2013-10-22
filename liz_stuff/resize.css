@@ -1,0 +1,9 @@
+body {
+  background-size: 100% auto;
+  overflow: hidden;
+}
+div.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
