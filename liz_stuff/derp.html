@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<title>My AWESOME page</title>
+	<link rel="stylesheet" type="text/css" href="resize.css"></link>
+	<link rel="stylesheet" type="text/css" href="style.css"></link>
+	<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="resize.js"></script>
+	<script src="http://code.createjs.com/createjs-2013.09.25.min.js"></script>
+	<script src="circle.js"></script>
+	<script>
+	    var stage, holder;
+	    function init() {
+		stage = new createjs.Stage("demoCanvas");
+		var text = new createjs.Text("Hello Luke", "bold 94px Arial", "#F00CEF");
+		stage.addChild(text);
+
+		var numCircles = 60;
+		var circles = new Array();
+		for (var i=0;i<numCircles;i++){
+		    circles.push(makeCircle());
+		}
+
+
+		createjs.Ticker.addEventListener("tick", handleTick);
+		createjs.Ticker.setInterval(25);
+		createjs.Ticker.useRAF = true;
+
+		function handleTick(event) { 
+		    for(var i = 0; i<circles.length; i++){
+			circle = circles[i];
+			circle.y = circle.y + circle.speed;
+			if ((circle.y-circle.radius-(circle.radius*2)) > stage.canvas.height) {
+			    circles.splice(i,1);
+			    circles.push(makeCircle());
+			}
+			circle.pulseCircles();
+		    }
+		    stage.clear();
+		    stage.update();
+		};
+
+		function makeCircle(){
+
+		    //return random radius between 10 and 90
+		    var getRadius = function(){
+			var rand = Math.random();
+			return Math.round(rand*80+10);
+		    };
+
+		    //return random color
+		    var getColor = function(){
+			var letters = '0123456789ABCDEF'.split('');
+			var color = '#';
+			for (var i = 0; i < 6; i++ ) {
+			    color += letters[Math.round(Math.random() * 15)];
+			}
+			return color;
+		    };
+
+		    //return random y between 10-window width
+		    var getX = function(){
+			var rand = Math.random();
+			windowW = window.innerWidth;
+			return Math.round(rand*windowW);
+		    };
+
+		    //return random speed between 1-10
+		    var getSpeed = function(){
+			var rand = Math.random();
+			return Math.round(rand*9+1);
+		    };
+
+		    //speed of pulsing inner circle between 16 and 20
+		    var getPulse = function(){
+			var rand = Math.random();
+			return Math.round(rand*4+16);
+		    };
+
+		    //random number of trailing circles between 2 and 6
+		    var getNumTrailingCircles = function(){
+			var rand = Math.random();
+			return Math.round(rand*2+4);
+		    }
+
+		    var circle = stage.addChild(new window.Circle(getRadius(), getColor(), getColor(), getSpeed(), getPulse(), getNumTrailingCircles()));
+		    circle.x = getX();
+
+		    return circle;
+		};
+
+	    };
+	</script>
+    </head>
+    <body onLoad="init();">
+	<div class="canvas"></div>
+    </body>
+</html>
